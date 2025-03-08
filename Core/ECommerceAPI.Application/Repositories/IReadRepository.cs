@@ -13,9 +13,9 @@ namespace ECommerceAPI.Application.Repositories
         // sorgu ise IQueryable, çoğuldur
         // inmemoryde çalışma yapılacak ise INumarable (List örn)
 
-        IQueryable<T> GetAll();
-        IQueryable<T> GetWhere(Expression<Func<T, bool>> method); // where şartı gibi kullanılacak
-        Task<T> GetSingleAsync(Expression<Func<T, bool>> method); //firstordefault async await
-        Task<T> GetByIdAsync(string id);
+        IQueryable<T> GetAll(bool tracking = true);
+        IQueryable<T> GetWhere(Expression<Func<T, bool>> method, bool tracking = true); // where şartı gibi kullanılacak
+        Task<T> GetSingleAsync(Expression<Func<T, bool>> method, bool tracking = true); //firstordefault async await
+        Task<T> GetByIdAsync(string id, bool tracking = true);
     }
 }
