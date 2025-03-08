@@ -57,8 +57,8 @@ namespace ECommerceAPI.Persistence.Repositories
             return entityEntry.State == EntityState.Modified;
         }
 
-        public Task<int> SaveAsync(T model)
-            => _context.SaveChangesAsync();
+        public  async Task<int> SaveAsync()
+            => await _context.SaveChangesAsync();
 
        
     }
