@@ -3,10 +3,14 @@ using ECommerceAPI.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPersistenceServices();
-// Add services to the container.
+
+//cors kurallarý 
+builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
+    //policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin() //bütün engelleri kaldýrdýk
+    policy.WithOrigins("https://localhost:4200", "http://localhost:4200").AllowAnyHeader().AllowAnyMethod()
+));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -19,6 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
