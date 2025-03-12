@@ -16,7 +16,7 @@ namespace ECommerceAPI.API.Controllers
         readonly private IProductReadRepository _productReadRepository;
 
 
-        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository
+        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
@@ -73,7 +73,7 @@ namespace ECommerceAPI.API.Controllers
             return Ok(_productReadRepository.GetAll(false));
         }
 
-        [[HttpGet("{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             return Ok(await _productReadRepository.GetByIdAsync(id, false));
@@ -104,7 +104,7 @@ namespace ECommerceAPI.API.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             await _productWriteRepository.RemoveAsync(id);
