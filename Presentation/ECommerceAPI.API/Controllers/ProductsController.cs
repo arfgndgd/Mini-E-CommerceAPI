@@ -147,8 +147,9 @@ namespace ECommerceAPI.API.Controllers
         public async Task<IActionResult> Upload()
         {
 
-            var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files);
-            //var datas = await _fileService.UploadAsync("resource/files", Request.Form.Files);
+            //var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files); //local
+            var datas = await _storageService.UploadAsync("files", Request.Form.Files); //azure
+            //var datas = await _fileService.UploadAsync("resource/files", Request.Form.Files); //cloud'ta resource kullanılmaz
             await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
             {
                 FileName = d.fileName,
