@@ -144,36 +144,45 @@ namespace ECommerceAPI.API.Controllers
         }
 
         [HttpPost("[action]")] //....../api/controller/action
-        public async Task<IActionResult> Upload()
+        public async Task<IActionResult> Upload(string id)
         {
 
-            //var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files); //local
-            var datas = await _storageService.UploadAsync("files", Request.Form.Files); //azure
-            //var datas = await _fileService.UploadAsync("resource/files", Request.Form.Files); //cloud'ta resource kullanılmaz
-            await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
+            ////var datas = await _storageService.UploadAsync("resource/files", Request.Form.Files); //local
+            //var datas = await _storageService.UploadAsync("files", Request.Form.Files); //azure
+            ////var datas = await _fileService.UploadAsync("resource/files", Request.Form.Files); //cloud'ta resource kullanılmaz
+            //await _productImageFileWriteRepository.AddRangeAsync(datas.Select(d => new ProductImageFile()
+            //{
+            //    FileName = d.fileName,
+            //    Path = d.pathOrContainerName,
+            //    Storage = _storageService.StorageName
+            //}).ToList());
+            //await _productImageFileWriteRepository.SaveAsync();
+
+            ////await _invoiceFileWriteRepository.AddRangeAsync(datas.Select(d => new InvoiceFile()
+            ////{
+            ////    FileName = d.fileName,
+            ////    Path = d.path,
+            ////    Price = new Random().Next()
+            ////}).ToList());
+            ////await _invoiceFileWriteRepository.SaveAsync();
+
+            ////await _fileWriteRepository.AddRangeAsync(datas.Select(d => new Domain.Entities.File()
+            ////{
+            ////    FileName = d.fileName,
+            ////    Path = d.path
+            ////}).ToList());
+            ////await _fileWriteRepository.SaveAsync();
+
+            List<(string fileName, string pathOrContainerName)> result = await _storageService.UploadAsync("photo-images", Request.Form.Files);
+
+            await _productImageFileWriteRepository.AddRangeAsync(result.Select(r => new ProductImageFile
             {
-                FileName = d.fileName,
-                Path = d.pathOrContainerName,
+                FileName = r.fileName,
+                Path = r.pathOrContainerName,
                 Storage = _storageService.StorageName
             }).ToList());
+
             await _productImageFileWriteRepository.SaveAsync();
-
-            //await _invoiceFileWriteRepository.AddRangeAsync(datas.Select(d => new InvoiceFile()
-            //{
-            //    FileName = d.fileName,
-            //    Path = d.path,
-            //    Price = new Random().Next()
-            //}).ToList());
-            //await _invoiceFileWriteRepository.SaveAsync();
-
-            //await _fileWriteRepository.AddRangeAsync(datas.Select(d => new Domain.Entities.File()
-            //{
-            //    FileName = d.fileName,
-            //    Path = d.path
-            //}).ToList());
-            //await _fileWriteRepository.SaveAsync();
-
-
             return Ok();
         }
         
