@@ -9,6 +9,8 @@ using System.Net;
 using System.Threading.Tasks;
 using ECommerceAPI.Application.Abstractions.Storage;
 using Microsoft.EntityFrameworkCore;
+using MediatR;
+using ECommerceAPI.Application.Features.Queries.GetAllProduct;
 
 namespace ECommerceAPI.API.Controllers
 {
@@ -28,7 +30,13 @@ namespace ECommerceAPI.API.Controllers
         readonly IStorageService _storageService;
         readonly IConfiguration _configuration;
 
-        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IFileReadRepository fileReadRepository, IProductImageFileReadRepository productImageFileReadRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration)
+
+
+        readonly IMediator _mediator;
+
+
+
+        public ProductsController(IProductWriteRepository productWriteRepository, IProductReadRepository productReadRepository, IWebHostEnvironment webHostEnvironment, IFileWriteRepository fileWriteRepository, IFileReadRepository fileReadRepository, IProductImageFileReadRepository productImageFileReadRepository, IProductImageFileWriteRepository productImageFileWriteRepository, IInvoiceFileReadRepository invoiceFileReadRepository, IInvoiceFileWriteRepository invoiceFileWriteRepository, IStorageService storageService, IConfiguration configuration, IMediator mediator)
         {
             _productWriteRepository = productWriteRepository;
             _productReadRepository = productReadRepository;
@@ -41,10 +49,11 @@ namespace ECommerceAPI.API.Controllers
             _invoiceFileWriteRepository = invoiceFileWriteRepository;
             _storageService = storageService;
             _configuration = configuration;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]Pagination pagination)
+        public async Task<IActionResult> Get([FromQuery] GetAllProductQueryRequest getAllProductQueryRequest)
         {
             #region training
             //await _productWriteRepository.AddRangeAsync(new()
@@ -89,22 +98,29 @@ namespace ECommerceAPI.API.Controllers
             //await _orderWriteRepository.SaveAsync();
             #endregion
 
-            var totalCount = _productReadRepository.GetAll(false).Count();
-            var products = _productReadRepository.GetAll(false).Skip(pagination.Page * pagination.Size).Take(pagination.Size).Select(p => new
-            {
-                p.Id,
-                p.Name,
-                p.Stock,
-                p.Price,
-                p.CreatedDate,
-                p.UpdatedDate
-            });
+            #region old code
 
-            return Ok(new
-            {
-                totalCount,
-                products
-            });
+            // paramater: [FromQuery]Pagination pagination
+            //var totalCount = _productReadRepository.GetAll(false).Count();
+            //var products = _productReadRepository.GetAll(false).Skip(pagination.Page * pagination.Size).Take(pagination.Size).Select(p => new
+            //{
+            //    p.Id,
+            //    p.Name,
+            //    p.Stock,
+            //    p.Price,
+            //    p.CreatedDate,
+            //    p.UpdatedDate
+            //});
+
+            //return Ok(new
+            //{
+            //    totalCount,
+            //    products
+            //});
+            #endregion
+
+            GetAllProductQueryResponse response = await _mediator.Send(getAllProductQueryRequest);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
