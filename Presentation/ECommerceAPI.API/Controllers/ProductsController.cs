@@ -11,6 +11,7 @@ using ECommerceAPI.Application.Abstractions.Storage;
 using Microsoft.EntityFrameworkCore;
 using MediatR;
 using ECommerceAPI.Application.Features.Queries.GetAllProduct;
+using ECommerceAPI.Application.Features.Commands.CreateProduct;
 
 namespace ECommerceAPI.API.Controllers
 {
@@ -131,15 +132,20 @@ namespace ECommerceAPI.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post(ProductCreateVM model)
+        public async Task<IActionResult> Post(CreateProductCommandRequest createProductCommandRequest)
         {
-            await _productWriteRepository.AddAsync(new()
-            {
-                Name = model.Name,
-                Price = model.Price,
-                Stock = model.Stock
-            });
-            await _productWriteRepository.SaveAsync();
+            #region old code
+            //paramater: ProductCreateVM model
+            //await _productWriteRepository.AddAsync(new()
+            //{
+            //    Name = model.Name,
+            //    Price = model.Price,
+            //    Stock = model.Stock
+            //});
+            //await _productWriteRepository.SaveAsync();
+            #endregion
+
+            CreateProductCommandResponse response = await _mediator.Send(createProductCommandRequest);
             return StatusCode((int)HttpStatusCode.Created);
         }
 
