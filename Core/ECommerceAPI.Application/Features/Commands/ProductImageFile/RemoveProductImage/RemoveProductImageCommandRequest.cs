@@ -10,5 +10,7 @@ namespace ECommerceAPI.Application.Features.Commands.ProductImageFile.RemoveProd
 {
     public class RemoveProductImageCommandRequest : IRequest<RemoveProductImageCommandResponse>
     {
+        public string Id { get; set; }
+        public string? ImageId { get; set; }
     }
 }
