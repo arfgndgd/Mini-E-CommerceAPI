@@ -263,7 +263,7 @@ namespace ECommerceAPI.API.Controllers
             #endregion
 
             List<GetProductImagesQueryResponse> response = await _mediator.Send(getProductImagesQueryRequest);
-            return Ok();
+            return Ok(response);
         }
 
         [HttpDelete("[action]/{Id}")]
