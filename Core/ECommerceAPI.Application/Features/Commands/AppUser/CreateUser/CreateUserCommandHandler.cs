@@ -23,20 +23,27 @@ namespace ECommerceAPI.Application.Features.Commands.AppUser.CreateUser
         {
             IdentityResult result = await _userManager.CreateAsync(new()
             {
+                Id = Guid.NewGuid().ToString(),
                 UserName = request.Username,
                 Email = request.Email,
                 NameSurname = request.NameSurname
             }, request.Password);
 
+            CreateUserCommandResponse response = new() { Succeeded = result.Succeeded };
+
             if (result.Succeeded)
             {
-                return new()
+                response.Message = "Kullanıcı başarıyla oluşturulmuştur.";
+            } else
+            {
+                foreach (var error in result.Errors)
                 {
-                    Succeeded = true,
-                    Message = "Kullanıcı başarıyla oluşturulmuştur."
-                };
+                    response.Message += $"{error.Code} - {error.Description}\n";
+                }
             }
-            throw new UserCreateFailedException();
+            return response;
+
+            //throw new UserCreateFailedException();
         }
     }
 }
