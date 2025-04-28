@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ECommerceAPI.Domain\ECommerceAPI.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstractions\Token\" />
+  </ItemGroup>
+
 </Project>
