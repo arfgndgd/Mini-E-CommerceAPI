@@ -33,8 +33,8 @@ builder.Services.AddControllers(options => options.Filters.Add<ValidatorFilter>(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication("Admin")
-    .AddJwtBearer(options => 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer("Admin", options => 
     {
         options.TokenValidationParameters = new()
         {
@@ -43,9 +43,9 @@ builder.Services.AddAuthentication("Admin")
             ValidateLifetime = true, // token deðerinin süresini kontrol edecek olan doðrulamadýr.
             ValidateIssuerSigningKey = true, // üretilecek token deðerinin uygulamamýza ait bir deðer olduðunu ifade eden security key verisinin doðrulanmasýdýr.
 
-            ValidAudience = builder.Configuration["Token: Audience"],
-            ValidIssuer = builder.Configuration["Token: Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token: SecurityKey"]))
+            ValidAudience = builder.Configuration["Token:Audience"],
+            ValidIssuer = builder.Configuration["Token:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]))
         };
     });
 
@@ -62,6 +62,7 @@ app.UseStaticFiles();
 app.UseCors();
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
